@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/Card"
+        xmlns:crd="http://www.example.org/Card"
+        elementFormDefault="qualified">
+<element name="oldCards">
+    <complexType>
+        <sequence>
+            <element name="card" type="crd:card" minOccurs="2" maxOccurs="unbounded"/>
+        </sequence>
+    </complexType>
+</element>
+
+    <complexType name="card">
+        <sequence>
+            <element name="name" type="ID"/>
+            <element name="country" type="string"/>
+            <element name="year" type="gYear"/>
+            <element name="language" type="language"/>
+            <element name="author" type="crd:person"/>
+            <element name="thema" type="crd:thema"/>
+        </sequence>
+        <attribute name="send" type="boolean" use="required"/>
+        <attribute name="dateOfSend" type="date" use="optional"/>
+        <attribute name="valuable" use="optional">
+            <simpleType>
+                <restriction base="string">
+                    <enumeration value="collection"/>
+                    <enumeration value="historical"/>
+                    <enumeration value="thematic"/>
+                </restriction>
+            </simpleType>
+        </attribute>
+    </complexType>
+
+    <complexType name="person">
+        <sequence>
+        <element name="firstName">
+            <simpleType>
+                <restriction base="string">
+                    <pattern value="[A-Z]{1}[a-z]{2,20}"/>
+                </restriction>
+            </simpleType>
+        </element>
+        <element name="lastName">
+            <simpleType>
+                <restriction base="string">
+                    <pattern value="[A-Z]{1}[a-z]{2,30}"/>
+                </restriction>
+            </simpleType>
+        </element>
+        </sequence>
+    </complexType>
+
+    <simpleType name="thema">
+        <restriction base="string">
+            <enumeration value="city"/>
+            <enumeration value="nature"/>
+            <enumeration value="space"/>
+            <enumeration value="animal"/>
+            <enumeration value="people"/>
+            <enumeration value="architecture"/>
+            <enumeration value="sport"/>
+            <enumeration value="flower"/>
+            <enumeration value="abstract"/>
+            <enumeration value="other"/>
+        </restriction>
+    </simpleType>
+
+    <complexType name="congratulatoryCard">
+        <complexContent>
+            <extension base="crd:card">
+                <sequence>
+                    <element name="destinationName" type="crd:person"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <complexType name="promotionCard">
+        <complexContent>
+            <extension base="crd:card">
+                <attribute name="company" use="required" type="string"/>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <complexType name="regularCard">
+        <complexContent>
+            <extension base="crd:card">
+                <attribute name="price" type="double" use="required"/>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <element name="card" type="crd:card" abstract="true"/>
+    <element name="congrCard" type="crd:congratulatoryCard" substitutionGroup="crd:card"/>
+    <element name="promCard" type="crd:promotionCard" substitutionGroup="crd:card"/>
+    <element name="regCard" type="crd:regularCard" substitutionGroup="crd:card"/>
+</schema>
